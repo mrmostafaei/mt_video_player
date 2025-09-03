@@ -29,13 +29,13 @@ class CustomVideoPlayerPlayPauseButton extends StatelessWidget {
 
   Future<void> _playPause(bool isPlaying) async {
     if (isPlaying) {
-      await customVideoPlayerController.videoPlayerController.pause();
+      await customVideoPlayerController.videoPlayerController.controller.pause();
     } else {
       if (customVideoPlayerController.customVideoPlayerSettings.playOnlyOnce &&
           customVideoPlayerController.playedOnceNotifier.value) {
         return;
       } else {
-        await customVideoPlayerController.videoPlayerController.play();
+        await customVideoPlayerController.videoPlayerController.controller.play();
         fadeOutOnPlay();
       }
     }

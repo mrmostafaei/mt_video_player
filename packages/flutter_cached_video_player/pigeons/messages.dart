@@ -1,5 +1,5 @@
 
-import 'package:pigeon/pigeon_lib.dart';
+import 'package:pigeon/pigeon.dart';
 
 class TextureMessage {
   int? textureId;

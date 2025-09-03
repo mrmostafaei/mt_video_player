@@ -105,7 +105,7 @@ class _AllControlsOverlayState extends State<AllControlsOverlay> {
       // only toggle visibility if the video is playing
       if (widget.customVideoPlayerController.customVideoPlayerSettings
               .autoFadeOutControls &&
-          widget.customVideoPlayerController.videoPlayerController.value
+          widget.customVideoPlayerController.videoPlayerController.controller.value
               .isPlaying) {
         if (_controlsVisible && _visibilityToggleCounter == 0) {
           widget.customVideoPlayerController.areControlsVisible.value = false;

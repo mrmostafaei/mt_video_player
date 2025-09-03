@@ -3,7 +3,7 @@ import 'package:mt_video_player/src/fullscreen_video_player.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:cached_video_player/cached_video_player.dart';
+import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:mt_video_player/src/models/custom_video_player_settings.dart';
 
 /// The extension on the class is able to call private methods
@@ -25,11 +25,11 @@ extension ProtectedMtcVideoPlayerController on MtcVideoPlayerController {
 
 class MtcVideoPlayerController {
   double _lastVolume = 0.5;
-  Duration get getPosition => videoPlayerController.value.position;
+  Duration get getPosition => videoPlayerController.controller.value.position;
   final BuildContext context;
-  CachedVideoPlayerController videoPlayerController;
+  CachedVideoPlayerPlus videoPlayerController;
   final CustomVideoPlayerSettings customVideoPlayerSettings;
-  final Map<String, CachedVideoPlayerController>? additionalVideoSources;
+  final Map<String, CachedVideoPlayerPlus>? additionalVideoSources;
   final ValueNotifier<bool> areControlsVisible = ValueNotifier<bool>(true);
 
   Future<void> switchSource(String sourceKey) async {
@@ -44,7 +44,7 @@ class MtcVideoPlayerController {
     this.customVideoPlayerSettings = const CustomVideoPlayerSettings(),
     this.additionalVideoSources,
   }) {
-    videoPlayerController.addListener(_videoListeners);
+    videoPlayerController.controller.addListener(_videoListeners);
   }
 
   /// public accessable methods and values for the controller
@@ -109,8 +109,8 @@ class MtcVideoPlayerController {
   }
 
   void _setOrientationForVideo() {
-    final double videoWidth = videoPlayerController.value.size.width;
-    final double videoHeight = videoPlayerController.value.size.height;
+    final double videoWidth = videoPlayerController.controller.value.size.width;
+    final double videoHeight = videoPlayerController.controller.value.size.height;
     final bool isLandscapeVideo = videoWidth > videoHeight;
     final bool isPortraitVideo = videoWidth < videoHeight;
 
@@ -137,30 +137,30 @@ class MtcVideoPlayerController {
   }
 
   Future<void> _switchVideoSource(String selectedSource) async {
-    CachedVideoPlayerController? newSource =
+    CachedVideoPlayerPlus? newSource =
         additionalVideoSources![selectedSource];
     if (newSource != null) {
-      Duration _playedDuration = videoPlayerController.value.position;
-      double _playbackSpeed = videoPlayerController.value.playbackSpeed;
-      bool _wasPlaying = videoPlayerController.value.isPlaying;
-      videoPlayerController.pause();
-      videoPlayerController.removeListener(_videoListeners);
+      Duration _playedDuration = videoPlayerController.controller.value.position;
+      double _playbackSpeed = videoPlayerController.controller.value.playbackSpeed;
+      bool _wasPlaying = videoPlayerController.controller.value.isPlaying;
+      videoPlayerController.controller.pause();
+      videoPlayerController.controller.removeListener(_videoListeners);
       videoPlayerController = newSource;
       await videoPlayerController.initialize();
-      videoPlayerController.addListener(
+      videoPlayerController.controller.addListener(
           _videoListeners); // add listeners to new video controller
       if (isFullscreen) {
         _setOrientationForVideo(); // if video changed completely
       }
-      await videoPlayerController.seekTo(_playedDuration);
+      await videoPlayerController.controller.seekTo(_playedDuration);
       if (Theme.of(context).platform != TargetPlatform.iOS) {
-        await videoPlayerController.setPlaybackSpeed(_playbackSpeed);
+        await videoPlayerController.controller.setPlaybackSpeed(_playbackSpeed);
       } else {
-        await videoPlayerController.setPlaybackSpeed(
+        await videoPlayerController.controller.setPlaybackSpeed(
             1); // resetting to 1 because its not working on iOS. open issue on github
       }
       if (_wasPlaying) {
-        await videoPlayerController.play();
+        await videoPlayerController.controller.play();
       }
       _updateViewAfterFullscreen?.call();
     }
@@ -177,11 +177,11 @@ class MtcVideoPlayerController {
 
   /// used to make progress more fluid
   Future<void> _fluidVideoProgressListener() async {
-    if (videoPlayerController.value.isPlaying) {
+    if (videoPlayerController.controller.value.isPlaying) {
       _timer ??= Timer.periodic(const Duration(milliseconds: 100),
           (Timer timer) async {
-        if (videoPlayerController.value.isInitialized) {
-          _videoProgressNotifier.value = await videoPlayerController.position ??
+        if (videoPlayerController.controller.value.isInitialized) {
+          _videoProgressNotifier.value = await videoPlayerController.controller.position ??
               _videoProgressNotifier.value;
         }
       });
@@ -189,9 +189,9 @@ class MtcVideoPlayerController {
       if (_timer != null) {
         _timer?.cancel();
         _timer = null;
-        if (videoPlayerController.value.isInitialized) {
+        if (videoPlayerController.controller.value.isInitialized) {
           _videoProgressNotifier.value =
-              (await videoPlayerController.position)!;
+              (await videoPlayerController.controller.position)!;
         }
       }
     }
@@ -199,9 +199,9 @@ class MtcVideoPlayerController {
 
   /// save that the video is played once
   void _onVideoEndListener() {
-    if (videoPlayerController.value.position > Duration.zero) {
-      if (videoPlayerController.value.duration ==
-          videoPlayerController.value.position) {
+    if (videoPlayerController.controller.value.position > Duration.zero) {
+      if (videoPlayerController.controller.value.duration ==
+          videoPlayerController.controller.value.position) {
         playedOnceNotifier.value = true;
       }
     }
@@ -209,17 +209,17 @@ class MtcVideoPlayerController {
 
   void _fullscreenFunctionalityListener() {
     // exit fullscreen on end
-    if (videoPlayerController.value.duration ==
-            videoPlayerController.value.position &&
-        !videoPlayerController.value.isPlaying &&
+    if (videoPlayerController.controller.value.duration ==
+            videoPlayerController.controller.value.position &&
+        !videoPlayerController.controller.value.isPlaying &&
         customVideoPlayerSettings.exitFullscreenOnEnd &&
         _isFullscreen) {
       setFullscreen(false);
     }
 
     // enter fullscreen on start
-    if (videoPlayerController.value.position == Duration.zero &&
-        videoPlayerController.value.isPlaying &&
+    if (videoPlayerController.controller.value.position == Duration.zero &&
+        videoPlayerController.controller.value.isPlaying &&
         customVideoPlayerSettings.enterFullscreenOnStart &&
         !_isFullscreen) {
       setFullscreen(true);
@@ -227,7 +227,7 @@ class MtcVideoPlayerController {
   }
 
   void _playPauseListener() {
-    if (videoPlayerController.value.isPlaying) {
+    if (videoPlayerController.controller.value.isPlaying) {
       _isPlayingNotifier.value = true;
     } else {
       _isPlayingNotifier.value = false;
@@ -235,12 +235,12 @@ class MtcVideoPlayerController {
   }
 
   void _playbackSpeedListener() {
-    _playbackSpeedNotifier.value = videoPlayerController.value.playbackSpeed;
+    _playbackSpeedNotifier.value = videoPlayerController.controller.value.playbackSpeed;
   }
 
   /// call dispose on the dispose method in your parent widget to be sure that every values is disposed
   void dispose() {
-    videoPlayerController.removeListener(_videoListeners);
+    videoPlayerController.controller.removeListener(_videoListeners);
     _timer?.cancel();
     _timer = null;
 
@@ -250,7 +250,7 @@ class MtcVideoPlayerController {
     videoPlayerController.dispose();
     if (additionalVideoSources != null) {
       if (additionalVideoSources!.isNotEmpty) {
-        for (MapEntry<String, CachedVideoPlayerController> videoSource
+        for (MapEntry<String, CachedVideoPlayerPlus> videoSource
             in additionalVideoSources!.entries) {
           videoSource.value.dispose();
         }
@@ -259,11 +259,11 @@ class MtcVideoPlayerController {
   }
 
   void mute() {
-    _lastVolume = videoPlayerController.value.volume;
-    videoPlayerController.setVolume(0);
+    _lastVolume = videoPlayerController.controller.value.volume;
+    videoPlayerController.controller.setVolume(0);
   }
 
   void unMute() {
-    videoPlayerController.setVolume(_lastVolume);
+    videoPlayerController.controller.setVolume(_lastVolume);
   }
 }

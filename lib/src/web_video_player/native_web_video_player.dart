@@ -2,7 +2,7 @@ import 'package:mt_video_player/mt_video_player.dart';
 import 'package:flutter/cupertino.dart';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
-import 'dart:ui' as ui;
+import 'dart:ui_web' as ui;
 
 class NativeWebVideoPlayer extends StatefulWidget {
   final MtcVideoPlayerWebController customVideoPlayerWebController;

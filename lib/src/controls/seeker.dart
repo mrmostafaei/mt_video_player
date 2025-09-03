@@ -24,18 +24,18 @@ class _CustomVideoPlayerSeekerState extends State<CustomVideoPlayerSeeker> {
       behavior: HitTestBehavior.opaque,
       child: widget.child,
       onHorizontalDragStart: (DragStartDetails details) {
-        if (!widget.customvVideoPlayerController.videoPlayerController.value
+        if (!widget.customvVideoPlayerController.videoPlayerController.controller.value
             .isInitialized) {
           return;
         }
         _videoPlaying = widget
-            .customvVideoPlayerController.videoPlayerController.value.isPlaying;
+            .customvVideoPlayerController.videoPlayerController.controller.value.isPlaying;
         if (_videoPlaying) {
-          widget.customvVideoPlayerController.videoPlayerController.pause();
+          widget.customvVideoPlayerController.videoPlayerController.controller.pause();
         }
       },
       onHorizontalDragUpdate: (DragUpdateDetails details) {
-        if (!widget.customvVideoPlayerController.videoPlayerController.value
+        if (!widget.customvVideoPlayerController.videoPlayerController.controller.value
             .isInitialized) {
           return;
         }
@@ -43,11 +43,11 @@ class _CustomVideoPlayerSeekerState extends State<CustomVideoPlayerSeeker> {
       },
       onHorizontalDragEnd: (DragEndDetails details) {
         if (_videoPlaying) {
-          widget.customvVideoPlayerController.videoPlayerController.play();
+          widget.customvVideoPlayerController.videoPlayerController.controller.play();
         }
       },
       onTapDown: (TapDownDetails details) {
-        if (!widget.customvVideoPlayerController.videoPlayerController.value
+        if (!widget.customvVideoPlayerController.videoPlayerController.controller.value
             .isInitialized) {
           return;
         }
@@ -61,9 +61,9 @@ class _CustomVideoPlayerSeekerState extends State<CustomVideoPlayerSeeker> {
     final Offset tapPos = box.globalToLocal(globalPosition);
     final double relative = tapPos.dx / box.size.width;
     final Duration position = widget
-            .customvVideoPlayerController.videoPlayerController.value.duration *
+            .customvVideoPlayerController.videoPlayerController.controller.value.duration *
         relative;
-    widget.customvVideoPlayerController.videoPlayerController.seekTo(position);
+    widget.customvVideoPlayerController.videoPlayerController.controller.seekTo(position);
     widget.customvVideoPlayerController.videoProgressNotifier.value = position;
   }
 }

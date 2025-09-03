@@ -1,8 +1,9 @@
+import 'package:mt_video_player/mt_video_player.dart';
 import 'package:mt_video_player/src/mtc_video_player_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:mt_video_player/src/controls/progress_bar_indicator.dart';
 import 'package:mt_video_player/src/controls/seeker.dart';
-import 'package:cached_video_player/cached_video_player.dart';
+import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 
 class CustomVideoPlayerProgressBar extends StatefulWidget {
   final MtcVideoPlayerController customVideoPlayerController;
@@ -20,13 +21,13 @@ class _VideoProgressIndicatorState extends State<CustomVideoPlayerProgressBar> {
   @override
   void initState() {
     super.initState();
-    widget.customVideoPlayerController.videoPlayerController
+    widget.customVideoPlayerController.videoPlayerController.controller
         .addListener(updateWidgetListener);
   }
 
   @override
   void deactivate() {
-    widget.customVideoPlayerController.videoPlayerController
+    widget.customVideoPlayerController.videoPlayerController.controller
         .removeListener(updateWidgetListener);
     super.deactivate();
   }
@@ -42,14 +43,14 @@ class _VideoProgressIndicatorState extends State<CustomVideoPlayerProgressBar> {
     if (widget.customVideoPlayerController.customVideoPlayerSettings
         .customVideoPlayerProgressBarSettings.showProgressBar) {
       Widget progressIndicator;
-      if (widget.customVideoPlayerController.videoPlayerController.value
+      if (widget.customVideoPlayerController.videoPlayerController.controller.value
           .isInitialized) {
         final int duration = widget.customVideoPlayerController
-            .videoPlayerController.value.duration.inMilliseconds;
+            .videoPlayerController.controller.value.duration.inMilliseconds;
 
         int maxBuffering = 0;
         for (DurationRange range in widget
-            .customVideoPlayerController.videoPlayerController.value.buffered) {
+            .customVideoPlayerController.videoPlayerController.controller.value.buffered) {
           final int end = range.end.inMilliseconds;
           if (end > maxBuffering) {
             maxBuffering = end;

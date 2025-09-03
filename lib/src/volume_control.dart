@@ -74,7 +74,7 @@ class _VolumeControlsState extends State<VolumeControls> {
         _globalKey.currentContext?.findRenderObject() as RenderBox;
     final double? height = _renderBoxRed?.size.height;
     final double volume =
-        widget.customVideoPlayerController.videoPlayerController.value.volume;
+        widget.customVideoPlayerController.videoPlayerController.controller.value.volume;
     double factor = 0.03;
     double dx = dragUpdateDetails.primaryDelta!; // Change in x direction
     double dy = dragUpdateDetails.primaryDelta!; // Change in y direction
@@ -84,14 +84,14 @@ class _VolumeControlsState extends State<VolumeControls> {
     normalizedSpeed = normalizedSpeed.clamp(0.0, 1.0);
     factor = normalizedSpeed;
     if (dragUpdateDetails.delta.dy > 0) {
-      widget.customVideoPlayerController.videoPlayerController
+      widget.customVideoPlayerController.videoPlayerController.controller
           .setVolume(volume - factor);
       setState(() {
         _progress =
             ((volume - factor) < 0 ? 0 : (volume - factor)) * (height ?? 0);
       });
     } else if (dragUpdateDetails.delta.dy < 0) {
-      widget.customVideoPlayerController.videoPlayerController
+      widget.customVideoPlayerController.videoPlayerController.controller
           .setVolume(volume + factor);
       setState(() {
         _progress =

@@ -4,7 +4,8 @@ import 'package:mt_video_player/src/seek_buttons.dart';
 import 'package:mt_video_player/src/thumbnail.dart';
 import 'package:mt_video_player/src/volume_control.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:cached_video_player/cached_video_player.dart';
+import 'package:cached_video_player_plus/cached_video_player_plus.dart';
+import 'package:video_player/video_player.dart';
 
 class EmbeddedVideoPlayer extends StatefulWidget {
   final MtcVideoPlayerController customVideoPlayerController;
@@ -33,15 +34,15 @@ class _EmbeddedVideoPlayerState extends State<EmbeddedVideoPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.customVideoPlayerController.videoPlayerController.value
+    if (widget.customVideoPlayerController.videoPlayerController.controller.value
         .isInitialized) {
       return AspectRatio(
         aspectRatio: widget.isFullscreen
-            ? widget.customVideoPlayerController.videoPlayerController.value
+            ? widget.customVideoPlayerController.videoPlayerController.controller.value
                 .aspectRatio
             : widget.customVideoPlayerController.customVideoPlayerSettings
                     .customAspectRatio ??
-                widget.customVideoPlayerController.videoPlayerController.value
+                widget.customVideoPlayerController.videoPlayerController.controller.value
                     .aspectRatio,
         child: Stack(
           children: [
@@ -51,10 +52,10 @@ class _EmbeddedVideoPlayerState extends State<EmbeddedVideoPlayer> {
             Center(
               child: AspectRatio(
                 aspectRatio: widget.customVideoPlayerController
-                    .videoPlayerController.value.aspectRatio,
+                    .videoPlayerController.controller.value.aspectRatio,
                 child: IgnorePointer(
-                  child: CachedVideoPlayer(
-                    widget.customVideoPlayerController.videoPlayerController,
+                  child: VideoPlayer(
+                    widget.customVideoPlayerController.videoPlayerController.controller,
                   ),
                 ),
               ),

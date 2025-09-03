@@ -77,7 +77,7 @@ class CustomVideoPlayerControlBar extends StatelessWidget {
                   return Text(
                     "-" +
                         getDurationAsString(customVideoPlayerController
-                                .videoPlayerController.value.duration -
+                                .videoPlayerController.controller.value.duration -
                             progress),
                     style: customVideoPlayerController
                         .customVideoPlayerSettings.durationRemainingTextStyle,

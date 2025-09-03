@@ -96,7 +96,7 @@ class _VideoSettingsPlaybackSpeedDialogState
     BuildContext context,
     double playbackSpeed,
   ) {
-    widget.customVideoPlayerController.videoPlayerController
+    widget.customVideoPlayerController.videoPlayerController.controller
         .setPlaybackSpeed(playbackSpeed);
     if (mounted) {
       setState(() {});

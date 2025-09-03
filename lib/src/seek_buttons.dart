@@ -73,28 +73,28 @@ class _SeekButtonsState extends State<SeekButtons> {
 
   void onSeekBack() async {
     Duration? currentPosition =
-        await widget.customVideoPlayerController.videoPlayerController.position;
+        await widget.customVideoPlayerController.videoPlayerController.controller.position;
     Duration seekDuration = widget
         .customVideoPlayerController.customVideoPlayerSettings.seekDuration;
     if (currentPosition != null) {
       Duration seekResult = Duration(
           microseconds:
               currentPosition.inMicroseconds + seekDuration.inMicroseconds);
-      widget.customVideoPlayerController.videoPlayerController
+      widget.customVideoPlayerController.videoPlayerController.controller
           .seekTo(seekResult);
     }
   }
 
   void onSeekForward() async {
     Duration? currentPosition =
-        await widget.customVideoPlayerController.videoPlayerController.position;
+        await widget.customVideoPlayerController.videoPlayerController.controller.position;
     Duration seekDuration = widget
         .customVideoPlayerController.customVideoPlayerSettings.seekDuration;
     if (currentPosition != null) {
       Duration seekResult = Duration(
           microseconds:
               currentPosition.inMicroseconds - seekDuration.inMicroseconds);
-      widget.customVideoPlayerController.videoPlayerController
+      widget.customVideoPlayerController.videoPlayerController.controller
           .seekTo(seekResult);
     }
   }

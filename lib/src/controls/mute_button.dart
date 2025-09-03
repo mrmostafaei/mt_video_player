@@ -32,7 +32,7 @@ class _CustomVideoPlayerMuteButtonState
   bool get isMute => volume == 0;
 
   double get volume =>
-      widget.customVideoPlayerController.videoPlayerController.value.volume;
+      widget.customVideoPlayerController.videoPlayerController.controller.value.volume;
 
   Future<void> _muteUnMute() async {
     if (isMute) {

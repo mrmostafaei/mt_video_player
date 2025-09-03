@@ -30,7 +30,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late CachedVideoPlayerController _videoPlayerController,
+  late CachedVideoPlayerPlus _videoPlayerController,
       _videoPlayerController2,
       _videoPlayerController3;
 
@@ -49,11 +49,11 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
 
-    _videoPlayerController = CachedVideoPlayerController.network(
-      longVideo,
+    _videoPlayerController = CachedVideoPlayerPlus.networkUrl(
+      Uri.parse(videoUrlLandscape),
     )..initialize().then((value) => setState(() {}));
-    _videoPlayerController2 = CachedVideoPlayerController.network(video240);
-    _videoPlayerController3 = CachedVideoPlayerController.network(video480);
+    _videoPlayerController2 = CachedVideoPlayerPlus.networkUrl(Uri.parse(video240));
+    _videoPlayerController3 = CachedVideoPlayerPlus.networkUrl(Uri.parse(video480));
     _customVideoPlayerController = MtcVideoPlayerController(
       context: context,
       videoPlayerController: _videoPlayerController,
@@ -104,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   _customVideoPlayerWebController.play();
                 } else {
                   _customVideoPlayerController.setFullscreen(true);
-                  _customVideoPlayerController.videoPlayerController.play();
+                  _customVideoPlayerController.videoPlayerController.controller.play();
                 }
               },
             ),
